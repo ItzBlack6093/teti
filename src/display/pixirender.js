@@ -37,6 +37,8 @@ export class PixiRender {
         await this.app.init({ backgroundAlpha: 0, resizeTo: window, autoDensity: true });
         document.body.prepend(this.app.canvas);
 
+        globalThis.__PIXI_APP__ = this.app; //pixijs devtools
+
         const labels = [
             "grid", "board", "clickArea", "next", "hold", "textContainer", 
             "particles", "rotationCenterC", "bagSeperatorC", "garbageBar"
@@ -424,6 +426,7 @@ export class PixiRender {
     CreateSpeedrunContainer() {
         if(this._speedrunMeta.container) return
             this._speedrunMeta.container = new PIXI.Container,
+            this._speedrunMeta.container.label = "speedrun"
             this._speedrunMeta.container.scale.set(.7),
             this._speedrunMeta.container.zIndex = 50,
             this._speedrunMeta.container.position.set(0, 0),
@@ -442,6 +445,7 @@ export class PixiRender {
                 };
                 this._speedrunMeta.splits[e] = t,
                 t.container = new PIXI.Container,
+                t.container.label = `floor${e+1}`
                 t.container.position.set(110 * (e - 4), 0),
                 this._speedrunMeta.container.addChild(t.container),
 
@@ -470,17 +474,17 @@ export class PixiRender {
                 t.topText = new PIXI.Text(``,{
                     fontSize: 23,
                     weight: 750,
-                    anchor: [.5, .5],
                 }),
-                t.topText.position.y = 12
+                t.topText.anchor.set(.5)
+                t.topText.position.set(50, 25)
                 t.container.addChild(t.topText)
 
                 t.bottomText = new PIXI.Text(`test`,{
                     fontSize: 15,
                     weight: 750,
-                    anchor: [.5, .5],
                 }),
-                t.bottomText.position.y = 12
+                t.bottomText.anchor.set(.5)
+                t.bottomText.position.set(50, 25)
                 t.container.addChild(t.bottomText)
         }
     }
@@ -528,13 +532,14 @@ export class PixiRender {
                 s.bottomText.alpha = 0;
                 if(oldPB){
                     s.topText.text = Game.renderer.formatTime(oldPB.pbstats.floorTime[t],3)
-                    s.topText.position.y = 3
-                    s.bottomText.position.y = 30
+                    s.topText.position.y = 15
+                    s.bottomText.position.y = 35
                     s.bottomText.alpha = 1;
                     s.bottomText.tint = oldPB.pbstats.floorTime[t] - Game.stats.time >= 20 ? 16758528 : (Game.stats.time < oldPB.pbstats.floorTime[t] ? 8978176 : 16734354)
                     s.bottomText.text = `${Game.stats.time < oldPB.pbstats.floorTime[t] ? "-" : "+"}${Game.renderer.formatTime(Math.abs(oldPB.pbstats.floorTime[t] - Game.stats.time), 3)}`
                 }
                 else{
+                    s.topText.position.y = 25
                     s.topText.text = Game.renderer.formatTime(Game.stats.time, 3)
                 }
             } else if (floor < t + 1) {
@@ -549,7 +554,7 @@ export class PixiRender {
                 s.bottomText.style.fill = 3355443;
                 s.bottomText.alpha = 0;
                 s.bg.tint = 0
-                s.topText.position.y = 12
+                s.topText.position.y = 25
             } else {
                 s.bg.scale.x = 6.25
             }
@@ -567,13 +572,12 @@ export class PixiRender {
             this._speedrunMeta.splits[e].container.rotation = 0,
             this._speedrunMeta.splits[e].container.alpha = 1,
             this._speedrunMeta.splits[e].container.pivot.x = -window.innerWidth * 2,
-            setTimeout(( () => {
                 gsap.to(this._speedrunMeta.splits[e].container, {
                     pixi: { pivotX: 0},
                     duration: 1,
-                    ease: "splitsStart"
+                    ease: "splitsStart",
+                    delay: (400 + 60 * e)/1000
                 });
-            }), 400 + 60 * e);
         }
 
         Game.animations.playRainbowAnimation(true)
@@ -586,13 +590,12 @@ export class PixiRender {
         for (let e = 0; e < 9; e++){
             this._speedrunMeta.splits[e].container.pivot.y = 0,
             this._speedrunMeta.splits[e].container.rotation = 0,
-            setTimeout(( () => {
                 gsap.to(this._speedrunMeta.splits[e].container, {
                     pixi: { pivotY: -100, rotation: .2 * Math.random() - .1, alpha: 0},
                     duration: 1,
-                    ease: "splitsDrop"
+                    ease: "splitsDrop",
+                    delay: (150 * Math.random())/1000
                 });
-            }), 150 * Math.random());
         }
 
         Game.animations.playRainbowAnimation(false)
@@ -604,13 +607,12 @@ export class PixiRender {
 
         for (let e = 0; e < 9; e++){
             this._speedrunMeta.splits[e].container.pivot.y = 0,
-            setTimeout(( () => {
                 gsap.to(this._speedrunMeta.splits[e].container, {
                     pixi: { pivotY: 100, alpha: 0},
                     duration: 1,
-                    ease: "splitsFly"
+                    ease: "splitsFly",
+                    delay: (4e3 + 150 * Math.random())/1000
                 });
-            }), 4e3 + 150 * Math.random());
         }
         Game.animations.playRainbowAnimation(false)
         Game.zenith.isHyperspeed = false
