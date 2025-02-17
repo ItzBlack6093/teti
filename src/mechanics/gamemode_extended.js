@@ -39,13 +39,11 @@ export class Zenith {
             this.climbPoints += e
         }
 
-        startZenithMode() {
+        tickZenithMode() {
             clearInterval(Game.zenithTimer);
-            document.getElementById("climbSpeedBar").style.display = "none"
             Game.pixi.CreateSpeedrunContainer()
             Game.pixi.StopSpeedrun()
             if(Game.settings.game.gamemode != "zenith") return
-            document.getElementById("climbSpeedBar").style.display = "block"
             Game.zenithTimer = setInterval(
                 () => {
                         let t = Math.floor(Game.stats.climbSpeed),
@@ -115,7 +113,6 @@ export class Zenith {
                     }
                     Game.stats.altitude = this.altitude
                     this.tickPass++
-                    this.drawClimbSpeedBar(Math.floor(Game.stats.climbSpeed), this.climbPoints, s)
 
                     /*
                         FATIGUES
@@ -135,18 +132,6 @@ export class Zenith {
             }
                 , 1000 / Game.tickrate);
         }
-
-        drawClimbSpeedBar(speed, point, require){ // todo: drawing polygons (parallelogram) cus idk
-            const color = ["var(--invis)", "#e43921", "#ffb400", "#82fc40", "#3ca6ff", "#ff46da", "#ffc48e", "#99ffc6", "#00f7ff", "#ffbbea", "#ffffff"]
-            const climbSpeedBar = document.getElementById("climbSpeedBar")
-
-            climbSpeedBar.value = point
-            climbSpeedBar.max = require
-            // changes css variable, better selection
-            document.getElementById("climbSpeedBar").style.setProperty("--background-colour", color[Math.min(10, speed - 1)])
-            document.getElementById("climbSpeedBar").style.setProperty("--bar-colour", color[Math.min(10, speed)])
-        }
- 
 }
 
 export class Grandmaster {

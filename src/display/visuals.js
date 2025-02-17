@@ -78,6 +78,7 @@ export class Visuals {
         this.baseContainer("rotationCenterC", { dx: 0, dy: 0, pivotdx: 0, pivotdy: height }, consts, rotationCenter, true);
         this.baseContainer("bagSeperatorC", { dx: 0, dy: height * 1 / 20, pivotdx: width * -11 / 10, pivotdy: 0 }, consts, bagSeperator, true);
         this.baseContainer("garbageBar", { dx: 0, dy: 0, pivotdx: width * 1 / 40, pivotdy: 0 }, consts, null);
+        this.baseContainer("climbSpeedBar", { dx: 0, dy: 0, pivotdx: width * -11 / 22, pivotdy: height * -106 / 100 }, consts, null);
     }
 
     /** @param {PixiRender} pixi */

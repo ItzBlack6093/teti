@@ -41,12 +41,14 @@ export class PixiRender {
 
         const labels = [
             "grid", "board", "clickArea", "next", "hold", "textContainer", 
-            "particles", "rotationCenterC", "bagSeperatorC", "garbageBar"
+            "particles", "rotationCenterC", "bagSeperatorC", "garbageBar",
+            "climbSpeedBar"
         ];
         const containers = this.visuals.generateContainers(labels);
         this.board = containers["board"];
         this.particleContainer = containers["particles"];
         this.garbageBar = containers["garbageBar"];
+        this.climbSpeedBar = containers["climbSpeedBar"];
 
         Game.particles.initBoard();
         await this.generateTextures();
@@ -249,6 +251,7 @@ export class PixiRender {
         this.updateAlpha();
         this.showTextOnTime(60, "60S LEFT");
         this.showTextOnTime(90, "90S LEFT");
+        this.updateClimbSpeedBar()
         this.TickSpeedrunUI(Game.zenith.GetFloorLevel(Game.stats.altitude))
     }
 
@@ -420,7 +423,18 @@ export class PixiRender {
         FadingCounter : 0,
         HidingCounter : 0,
     };
-    
+
+    ol(e, t, n) {
+        n /= 100;
+        const s = t * Math.min(n, 1 - n) / 100
+          , i = t => {
+            const i = (t + e / 30) % 12
+              , o = n - s * Math.max(Math.min(i - 3, 9 - i, 1), -1);
+            return Math.round(255 * o)
+        }
+        ;
+        return i(0) << 16 | i(8) << 8 | i(4)
+    }
 
 
     CreateSpeedrunContainer() {
@@ -492,23 +506,10 @@ export class PixiRender {
     TickSpeedrunUI(floor){
         if(!this._speedrunMeta.container|| Game.settings.game.gamemode != "zenith") return
 
-        function ol(e, t, n) {
-            n /= 100;
-            const s = t * Math.min(n, 1 - n) / 100
-              , i = t => {
-                const i = (t + e / 30) % 12
-                  , o = n - s * Math.max(Math.min(i - 3, 9 - i, 1), -1);
-                return Math.round(255 * o)
-            }
-            ;
-            return i(0) << 16 | i(8) << 8 | i(4)
-        }
-
-    
         for (let t = 0; t < 9; t++) {
             const s = this._speedrunMeta.splits[t],
                   i = Game.zenith.tickPass;
-            s.bg.tint = ol(1.5 * i + 34.7 * t, 100, 70 - 10);
+            s.bg.tint = this.ol(1.5 * i + 34.7 * t, 100, 70 - 10);
             s.inner.alpha = .75 - ((i / Game.tickrate * 4) % 2) / 10
             let o = 0;
             if(Game.zenith.isHyperspeed){
@@ -624,4 +625,194 @@ export class PixiRender {
         //this._speedrunMeta.container.scale.set(scale)
     }
 
+    // Climb speed bar
+
+    updateClimbSpeedBar(){
+        if (this.climbSpeedBar == undefined) return; 
+
+        this.climbSpeedBar.children.forEach(child => child.destroy());
+        this.climbSpeedBar.removeChildren();
+
+        const y = 0
+        const height = this.height * (1 / 20);
+
+        const ZENITHRANK_COLORS = {
+            1: {
+                r: 0,
+                g: 0,
+                b: 0,
+                sr: 0,
+                sg: 0,
+                sb: 0,
+                tr: 255,
+                tg: 255,
+                tb: 255,
+                a: 0
+            },
+            2: {
+                r: 228,
+                g: 57,
+                b: 33,
+                sr: 255,
+                sg: 107,
+                sb: 37,
+                tr: 255,
+                tg: 107,
+                tb: 37,
+                a: 1
+            },
+            3: {
+                r: 255,
+                g: 180,
+                b: 0,
+                sr: 255,
+                sg: 237,
+                sb: 34,
+                tr: 255,
+                tg: 237,
+                tb: 34,
+                a: 1
+            },
+            4: {
+                r: 130,
+                g: 252,
+                b: 64,
+                sr: 201,
+                sg: 252,
+                sb: 36,
+                tr: 201,
+                tg: 252,
+                tb: 36,
+                a: 1
+            },
+            5: {
+                r: 60,
+                g: 166,
+                b: 255,
+                sr: 195,
+                sg: 116,
+                sb: 255,
+                tr: 71,
+                tg: 235,
+                tb: 255,
+                a: 1
+            },
+            6: {
+                r: 255,
+                g: 70,
+                b: 218,
+                sr: 255,
+                sg: 204,
+                sb: 181,
+                tr: 255,
+                tg: 204,
+                tb: 181,
+                a: 1
+            },
+            7: {
+                r: 255,
+                g: 196,
+                b: 142,
+                sr: 255,
+                sg: 162,
+                sb: 75,
+                tr: 255,
+                tg: 215,
+                tb: 120,
+                a: 1
+            },
+            8: {
+                r: 153,
+                g: 255,
+                b: 198,
+                sr: 66,
+                sg: 255,
+                sb: 101,
+                tr: 66,
+                tg: 255,
+                tb: 101,
+                a: 1
+            },
+            9: {
+                r: 0,
+                g: 247,
+                b: 255,
+                sr: 115,
+                sg: 162,
+                sb: 255,
+                tr: 71,
+                tg: 255,
+                tb: 183,
+                a: 1
+            },
+            10: {
+                r: 255,
+                g: 187,
+                b: 234,
+                sr: 249,
+                sg: 133,
+                sb: 255,
+                tr: 253,
+                tg: 245,
+                tb: 188,
+                a: 1
+            },
+            11: {
+                r: 255,
+                g: 255,
+                b: 255,
+                sr: 255,
+                sg: 255,
+                sb: 255,
+                tr: 255,
+                tg: 255,
+                tb: 255,
+                a: 1
+            },
+            default: {
+                r: 255,
+                g: 255,
+                b: 255,
+                sr: 255,
+                sg: 255,
+                sb: 255,
+                tr: 255,
+                tg: 255,
+                tb: 255,
+                a: 1
+            }
+        }      
+
+        const s = Game.stats.climbSpeed
+              , i = Math.floor(s)
+              , o = s - i
+              , h = Game.zenith.SpeedrunReq[Game.zenith.GetFloorLevel(Game.stats.altitude)]
+              , a = {...ZENITHRANK_COLORS[i] ?? ZENITHRANK_COLORS.default}
+              , r = {...ZENITHRANK_COLORS[i + 1] ?? ZENITHRANK_COLORS.default},
+                bgColor = new PIXI.Color({ r: a.r, g: a.g, b: a.b, a: a.a }).toArray(),
+                fgColor = new PIXI.Color({ r: r.r, g: r.g, b: r.b, a: r.a }).toArray();
+
+            const hyperspeedbg = new PIXI.Graphics()
+                .rect(0, y, this.width, height / 4)
+                .fill({ color: 0xffffff, alpha: 1 });
+            hyperspeedbg.pivot.set(this.width / 2, height / 8)
+            hyperspeedbg.scale.set(1.1);
+            hyperspeedbg.alpha = Game.zenith.isHyperspeed ? 1 : h > 0 ? 1 - (h - s) : 0;
+            hyperspeedbg.tint = Game.zenith.isHyperspeed ? this.ol(1.5 * Game.zenith.tickPass + 34.7 * (Game.zenith.tickPass / 10) % 10, 100, 70 - 10) : 0xffffff;
+            this.climbSpeedBar.addChild(hyperspeedbg);
+
+            const bg = new PIXI.Graphics()
+                .rect(0, y, this.width, height / 4)
+                .fill({ color: bgColor, alpha: 1 });
+            bg.pivot.set(this.width / 2, height / 8)
+            this.climbSpeedBar.addChild(bg);
+
+            const fg = new PIXI.Graphics()
+                .rect(0, y, this.width, height / 4)
+                .fill({ color: fgColor, alpha: 1 });
+            fg.pivot.set(this.width / 2, height / 8)
+            fg.scale.x = o;
+            this.climbSpeedBar.addChild(fg);
+
+    }
 }

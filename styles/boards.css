@@ -40,28 +40,6 @@
     border-radius: 0.7vh;
 }
 
-#climbSpeedBar {
-    /* css variables which can be changed with js */
-    --bar-colour: red;
-    --background-colour: #00000000;
-    position: absolute;
-    width: 32vh;
-    height: 1vh;
-    border-radius: 0.5vh;
-    transform-origin: 0 0;
-    left: -2%;
-    bottom: -5%;
-}
-
-#climbSpeedBar::-webkit-progress-value {
-    background-color: var(--bar-colour);
-    border-radius: 0.7vh;
-}
-
-#climbSpeedBar::-webkit-progress-bar {
-    background-color: var(--background-colour);
-    border-radius: 0.7vh;
-}
 
 #garbageQueue {
     position: absolute;

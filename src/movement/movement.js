@@ -3,7 +3,7 @@ import { Game } from "../main.js";
 
 export class Movement {
     startTimers() {
-        Game.zenith.startZenithMode();
+        Game.zenith.tickZenithMode();
         Game.grandmaster.startGrandmasterTimer();
         if (Game.zenith.tickPass == 0 && Game.settings.game.gamemode == "zenith") Game.renderer.renderTimeLeft("FLOOR 1")
         Game.started = true;
