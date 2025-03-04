@@ -36,14 +36,7 @@ export class PixiRender {
         this.app = new PIXI.Application();
         await this.app.init({ backgroundAlpha: 0, resizeTo: window, autoDensity: true });
         document.body.prepend(this.app.canvas);
-
-        window.__PIXI_DEVTOOLS__ = {
-          app: this.app,
-          // If you are not using a pixi app, you can pass the renderer and stage directly
-          // renderer: myRenderer,
-          // stage: myStage,
-        }; //pixijs devtools
-
+        
         const labels = [
             "grid", "board", "clickArea", "next", "hold", "textContainer", 
             "particles", "rotationCenterC", "bagSeperatorC", "garbageBar",
