@@ -38,7 +38,7 @@ export class PixiRender {
         document.body.prepend(this.app.canvas);
 
         window.__PIXI_DEVTOOLS__ = {
-          app: app,
+          app: this.app,
           // If you are not using a pixi app, you can pass the renderer and stage directly
           // renderer: myRenderer,
           // stage: myStage,
