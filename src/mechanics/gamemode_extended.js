@@ -88,9 +88,10 @@ export class Zenith {
                         }
                     }
 
-                if(this.isLastRankChangePromote && this.climbPoints >= 2*(t-1)){
-            this.promotionFatigue = 0
-                      }
+                if(this.isLastRankChangePromote && this.climbPoints >= 2*(t-1))
+                {
+                    this.promotionFatigue = 0
+                }
 
                 //calculate stats
                     Game.stats.climbSpeed = t + this.climbPoints / (4 * t);
