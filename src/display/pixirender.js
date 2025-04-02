@@ -36,9 +36,7 @@ export class PixiRender {
         this.app = new PIXI.Application();
         await this.app.init({ backgroundAlpha: 0, resizeTo: window, autoDensity: true });
         document.body.prepend(this.app.canvas);
-
-        globalThis.__PIXI_APP__ = this.app; //pixijs devtools
-
+        
         const labels = [
             "grid", "board", "clickArea", "next", "hold", "textContainer", 
             "particles", "rotationCenterC", "bagSeperatorC", "garbageBar",
