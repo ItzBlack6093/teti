@@ -126,6 +126,25 @@ export class Animations {
             .to(go, { duration: 1, pixi: { scale: 2, alpha: 0 }, ease: "power1.out" })
     }
 
+    //level up text
+    showLevelUpText(msg){
+        this.texts.leveluptext.animation.kill();
+        const text = this.texts.leveluptext.sprite;
+        text.text = msg
+        CustomEase.create("levelup", ".2, .65, .88, .64");
+        gsap.to(text, {duration: 0, pixi: {alpha: 0, pivotY: 20}})
+        this.texts.leveluptext.animation = gsap.timeline()
+            .to(text, { duration: 0.1, pixi: {alpha: 1, pivotY: 70}})
+            .to(text, { duration: 0.9, pixi: {alpha: 0, pivotY: 350} })
+        }
+
+    //pro mode text
+    updateProText(msg, alpha = 0){
+        const text = this.texts.protext.sprite;
+        text.text = msg
+        text.alpha = Game.settings.display.showIndicators ? alpha : 0
+    }
+
     // reset
     resetAnimation() {
         Game.pixi.board.mask = Game.pixi.resetMask;

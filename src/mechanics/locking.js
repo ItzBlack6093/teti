@@ -94,7 +94,9 @@ export class LockPiece {
         Game.mechanics.isAllspin = false;
         Game.mechanics.isMini = false;
         Game.falling.moved = false;
-        if (Game.stats.tgm_level % 100 != 99 && Game.stats.tgm_level != Game.settings.game.raceTarget - 1) Game.stats.tgm_level++;
+        if (Game.stats.tgm_level % 100 != 99 && Game.stats.tgm_level != Game.settings.game.raceTarget - 1){
+            Game.stats.tgm_level++;
+        }
 
 
         const xvals = [...new Set(lockCoords.map(([x, y]) => x))];

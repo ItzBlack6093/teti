@@ -249,8 +249,9 @@ export class PixiRender {
         Game.particles.update();
         Game.renderer.dangerParticles();
         this.updateAlpha();
+        this.updateProText(Game.settings.game.gamemode);
         this.showTextOnTime(60, "60S LEFT");
-        this.showTextOnTime(90, "90S LEFT");
+        this.showTextOnTime(90, "30S LEFT");
         this.updateClimbSpeedBar()
         this.TickSpeedrunUI(Game.zenith.GetFloorLevel(Game.stats.altitude))
     }
@@ -260,6 +261,25 @@ export class PixiRender {
             if (Math.floor(Game.stats.time) == time) {
                 Game.renderer.renderTimeLeft(text);
             }
+        }
+    }
+
+    updateProText(mode) {
+        switch(mode){
+        case "sprint":
+            Game.renderer.updateProText(Game.stats.getRemainingSprintLine(), 0.25)
+            break;
+        case "digger":
+            Game.renderer.updateProText(Game.stats.getRemainingGarbage(), 0.25)
+            break;
+        case "ultra":
+            Game.renderer.updateProText(Game.renderer.formatTime(Game.stats.getRemainingUltraTime(), 0), 0.25)
+            break;
+        case "zenith":
+            Game.renderer.updateProText(`${Math.floor(Game.zenith.bonusAltitude).toLocaleString("en-US")}.${Math.floor(10 * (Game.zenith.bonusAltitude - Math.floor(Game.zenith.bonusAltitude))).toString()}`, 0.25)
+            break;
+        default:
+            Game.renderer.updateProText('pro')
         }
     }
 
@@ -509,20 +529,20 @@ export class PixiRender {
         for (let t = 0; t < 9; t++) {
             const s = this._speedrunMeta.splits[t],
                   i = Game.zenith.tickPass;
-            s.bg.tint = this.ol(1.5 * i + 34.7 * t, 100, 70 - 10);
-            s.inner.alpha = .75 - ((i / Game.tickrate * 4) % 2) / 10
-            let o = 0;
             if(Game.zenith.isHyperspeed){
-                switch (Math.floor((i / Game.tickrate * 2) % 2)) {
-                case 0:
-                    o = -1;
-                    break;
-                case 1:
-                    o = 1;
-                    break;
+                s.bg.tint = this.ol(1.5 * i + 34.7 * t, 100, 70 - 10);
+                s.inner.alpha = .75 - ((i / Game.tickrate * 4) % 2) / 10
+                let o = 0;
+                    switch (Math.floor((i / Game.tickrate * 2) % 2)) {
+                    case 0:
+                        o = -1;
+                        break;
+                    case 1:
+                        o = 1;
+                        break;
+                    }
+                    s.container.y = window.innerHeight - 40 + 4 * o * (t % 2 == 0 ? 1 : -1)
                 }
-                s.container.y = window.innerHeight - 40 + 4 * o * (t % 2 == 0 ? 1 : -1)
-            }
             let oldPB = localStorage.stats ? JSON.parse(localStorage.stats).pbs.zenith : undefined
             if (oldPB && oldPB.pbstats.floorTime == undefined) oldPB = undefined;
             if (floor === t + 1) {

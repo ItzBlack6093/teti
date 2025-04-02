@@ -101,6 +101,14 @@ export class GameStats {
         return Game.settings.game.requiredGarbage - this.cleargarbage
     }
 
+    getRemainingSprintLine(){
+        return Game.settings.game.requiredLines - this.clearlines
+    }
+
+    getRemainingUltraTime(){
+        return Game.settings.game.timeLimit - this.time
+    }
+
     updateBTB(isBTB, count) {
         this.btbCount = isBTB ?
             this.btbCount + 1 :

@@ -157,6 +157,10 @@ export class Renderer {
         Game.animations.showTimeLeftText(text);
     }
 
+    updateProText(msg, alpha){
+        Game.animations.updateProText(msg, alpha)
+    }
+
     setEditPieceColours() {
         const elPieces = [...this.elementEditPieces.children];
         elPieces.forEach(elpiece => {

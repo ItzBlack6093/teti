@@ -158,6 +158,9 @@ export class Visuals {
         const statSecondaryStyle = new PIXI.TextStyle({ fontFamily: "MajorMonoDisplay", fontSize: 26, fill: "white", fontWeight: "bold" });
         const readyTexts = new PIXI.TextStyle({ fontFamily: "MajorMonoDisplay", fontSize: 30, fill: "yellow" });
         const goText = new PIXI.TextStyle({ fontFamily: "Montserrat, sans-serif", fontSize: 50, fill: "#7ACD44" });
+        const levelUpText = new PIXI.TextStyle({ fontFamily: "Montserrat, sans-serif", fontSize: 100, fill: 6256003, fontWeight: "bold" });
+        const proText = new PIXI.TextStyle({ fontFamily: "Montserrat, sans-serif", fontSize: 60, weight: 600, fill: 16777215, outlineTint: 0, outlineWeight: 900, outlineAlpha: 1, fontWeight: "bold" });
+
 
         this.createTextGraphic(style, "hold", { ...defaultPos, x: -3.5 / 10 }, grid, 1, "hold");
         this.createTextGraphic(style, "next", { ...defaultPos, x: 11 / 10 }, grid, 1, "next");
@@ -170,6 +173,8 @@ export class Visuals {
         this.createTextGraphic(timeLeftStyle, "timelefttext", { ...defaultPos, x: 0.5, y: 1 / 8, anchorX: 0.5 }, txtCnt);
         this.createTextGraphic(statSecondaryStyle, "objectiveText", { ...defaultPos, x: 11 / 10, y: 1 - 3 / 40 }, txtCnt, 1);
         this.createTextGraphic(statTextStyle, "objectiveNameText", { ...defaultPos, x: 11 / 10, y: 1 - 5 / 40 }, txtCnt, 1);
+        this.createTextGraphic(levelUpText, "leveluptext", {...defaultPos, x: 0.5, y: 1, anchorX: 0.5, anchorY: 0.5}, txtCnt, 0, "M1");
+        this.createTextGraphic(proText, "protext", {...defaultPos, x: 0.5, y: 0.25, anchorX: 0.5, anchorY: 0.5}, txtCnt, 0.2, 40);
 
         this.createTextGraphic(readyTexts, "ready", { ...defaultPos, x: 0.5, y: 0.3, anchorX: 0.5, anchorY: 0.5 }, txtCnt, 0, "ready");
         this.createTextGraphic(readyTexts, "set", { ...defaultPos, x: 0.5, y: 0.3, anchorX: 0.5, anchorY: 0.5 }, txtCnt, 0, "set");

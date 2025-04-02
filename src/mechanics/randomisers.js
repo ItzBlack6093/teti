@@ -16,7 +16,7 @@ export class Bag {
     bagid = 0;
     bagExtra = [];
     queue = [];
-    history = ["s", "z", "s", "z"]
+    history = ["s", "z", "s", "z"];
     type;
     genseed;
 
@@ -153,18 +153,15 @@ export class Bag {
     tgmHis(reroll) {
         let bag = [];
         let rerollCount = reroll
-
         while (bag.length != 7) {
             const ind = Math.floor(this.rng.nextFloat() * pieceNames.length);
             rerollCount--
-
             if (!this.history.includes(pieceNames[ind]) || rerollCount == 0) {
                 this.history.shift()
                 this.history.push(pieceNames[ind])
                 bag.push(pieceNames[ind]);
                 rerollCount = reroll
             }
-
         }
         return bag
     }

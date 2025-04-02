@@ -90,7 +90,17 @@ export class Zenith {
 
                 //calculate stats
                     Game.stats.climbSpeed = t + this.climbPoints / (4 * t);
-                    this.altitude += o / 60 * a
+                    
+                    const m = this.altitude
+                        , x = this.GetFloorLevel(m);
+                        if (true) { //expert reversed
+                            this.altitude = Math.max(this.FloorDistance[x - 1], m - .05 * (x ** 2 + x + 10) / 60)
+                        } else { // normal
+                            const e = .25 * t
+                            , n = this.GetSpeedCap(m);
+                            this.altitude += e / 60 * n
+                        }
+                    
                     if (this.bonusAltitude > 0)
                         if (this.bonusAltitude <= .05)
                             this.altitude += this.bonusAltitude,
@@ -139,6 +149,7 @@ export class Grandmaster {
     gradeBoost = 0; // the one used to determine which grade to shown in the array
     gradePoint = 0; 
     internalGrade = 0; // the one to determine how many grade to boost
+    previousSectionTime = 52
     isCoolCheck = false;
     coolsCount = 0;
     regretsCount = 0;
@@ -185,7 +196,53 @@ export class Grandmaster {
     ];
     gradeBoostTable = [
         0,1,2,3,4,5,5,6,6,7,7,7,8,8,8,9,9,9,10,11,12,12,12,13,13,14,14,15,15,16,16,17,17,18,18,19,19,20,20,21,21,22,22,23,23,24,24,25,25,26,26,26,27,27,27,27,28,28,28,28,28,29,29,29,29,29,30,30,30,30,30
-];
+    ];
+
+    speedTable = // 1 / 65536 G
+    {
+        0:1024,
+        30:1536,
+        35:2048,
+        40:2560,
+        50:3072,
+        60:4096,
+        70:8192,
+        80:12288,
+        90:16384,
+        100:20480,
+        120:24576,
+        140:28672,
+        160:32768,
+        180:36864,
+        200:1024,
+        220:8192,
+        230:16384,
+        233:24576,
+        236:32768,
+        239:40960,
+        243:49152,
+        247:57344,
+        251:65536,
+        300:131072,
+        330:196608,
+        360:262144,
+        400:327680,
+        420:262144,
+        450:196608,
+        500:1310720
+    }
+
+    getSpeed(e) {
+        return Game.settings.game.gravitySpeed
+        const t = Object.keys(this.speedTable);
+        for (e = Math.max(0, Math.floor(e)); e >= 1; )
+            for (let o = t.length - 1; o >= 0; o--)
+                if (e / t[o] >= 1) {
+                    if(this.speedTable[t[o]] >= 1310720) return 0
+                    e -= t[o]
+                    return 1000 / (60 * this.speedTable[t[o]] / 65536);
+                }
+    }
 
     coolsTable = [52, 52, 49, 45, 45, 42, 42, 38, 38, 0];
     regretsTable = [90, 75, 75, 68, 60, 60, 50, 50, 50, 50];
@@ -221,8 +278,9 @@ export class Grandmaster {
 
     checkSectionCleared(){
         if(Game.stats.tgm_level >= this.sectionTarget){
-            Game.renderer.renderTimeLeft("SECTION " + Math.ceil(this.sectionTarget / 100) + " CLEAR");
+            Game.animations.showLevelUpText(Math.ceil(this.sectionTarget / 100) + 1);
             Game.sounds.playSound("levelup");
+            this.coolsCount = this.isCoolCheck ? this.coolsCount + 1 : this.coolsCount
             if(this.sectionTime >= this.regretsTable[(this.sectionTarget / 100) - 1]){
                 Game.renderer.renderTimeLeft("REGRET");
                 this.regretsCount++;
@@ -236,9 +294,12 @@ export class Grandmaster {
     checkCool(){
         if(Game.stats.tgm_level % 100 >= 70 && !this.isCoolCheck){
             this.isCoolCheck = true;
-            if(this.sectionTime <= this.coolsTable[(this.sectionTarget / 100) - 1]){
+            if(this.sectionTime <= Math.min(this.coolsTable[(this.sectionTarget / 100) - 1], this.previousSectionTime + 2)){
+                this.previousSectionTime = this.sectionTime;
                 Game.renderer.renderTimeLeft("COOL!");
-                this.coolsCount++;
+            }
+            else{
+                this.previousSectionTime = 52;
             }
         }
     }
