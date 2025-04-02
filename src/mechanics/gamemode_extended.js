@@ -98,7 +98,7 @@ export class Zenith {
                     
                     const m = this.altitude
                         , x = this.GetFloorLevel(m);
-                        if (true) { //expert reversed
+                        if (false) { //expert reversed
                             this.altitude = Math.max(this.FloorDistance[x - 1], m - .05 * (x ** 2 + x + 10) / 60)
                         } else { // normal
                             const e = .25 * t
