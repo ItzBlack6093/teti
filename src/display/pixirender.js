@@ -249,14 +249,14 @@ export class PixiRender {
         this.updateAlpha();
         this.updateProText(Game.settings.game.gamemode);
         this.showTextOnTime(60, "60S LEFT");
-        this.showTextOnTime(90, "30S LEFT");
+        this.showTextOnTime(30, "30S LEFT");
         this.updateClimbSpeedBar()
         this.TickSpeedrunUI(Game.zenith.GetFloorLevel(Game.stats.altitude))
     }
 
     showTextOnTime(time, text) {
         if (Game.settings.game.gamemode == "ultra") {
-            if (Math.floor(Game.stats.time) == time) {
+            if (Math.floor(Game.stats.getRemainingUltraTime()) == time) {
                 Game.renderer.renderTimeLeft(text);
             }
         }
